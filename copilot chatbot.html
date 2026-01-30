@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Copilot Style Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #f4f6fa;
+      color: #222;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .chat-container {
+      max-width: 420px;
+      margin: 48px auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      height: 75vh;
+      overflow: hidden;
+      border: 1px solid #e3e7ee;
+    }
+    .chat-header {
+      background: #e8f0fe;
+      padding: 22px 0 18px 0;
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-bottom: 1px solid #e3e7ee;
+    }
+    .copilot-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #2563eb 60%, #60a5fa 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3em;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f8fafc;
+    }
+    .message {
+      max-width: 80%;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 1em;
+      line-height: 1.5;
+      word-break: break-word;
+      box-shadow: 0 2px 8px rgba(36, 99, 235, 0.04);
+      transition: background 0.2s;
+    }
+    .user {
+      align-self: flex-end;
+      background: #2563eb;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+    .bot {
+      align-self: flex-start;
+      background: #e8f0fe;
+      color: #222;
+      border-bottom-left-radius: 4px;
+      border-top-left-radius: 4px;
+      border: 1px solid #dbeafe;
+    }
+    .chat-input-area {
+      display: flex;
+      border-top: 1px solid #e3e7ee;
+      background: #fff;
+      padding: 14px 12px;
+      gap: 10px;
+    }
+    .chat-input-area input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #dbeafe;
+      font-size: 1em;
+      outline: none;
+      background: #f4f6fa;
+      color: #222;
+      transition: border 0.2s;
+    }
+    .chat-input-area input:focus {
+      border: 1.5px solid #2563eb;
+      background: #fff;
+    }
+    .chat-input-area button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0 22px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(36, 99, 235, 0.08);
+    }
+    .chat-input-area button:hover {
+      background: #1d4ed8;
+    }
+    /* Custom scrollbar for chat */
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+      background: #f4f6fa;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #dbeafe;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <span class="copilot-icon">🧑‍💻</span>
+      Copilot Chat
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">Hello! I'm Copilot. How can I assist you today?</div>
+    </div>
+    <form class="chat-input-area" id="chatForm" autocomplete="off">
+      <input type="text" id="userInput" placeholder="Type your message..." required autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const userInput = document.getElementById('userInput');
+
+    // Copilot-style bot responses
+    function getBotResponse(input) {
+      const msg = input.toLowerCase();
+      if (msg.includes('hello') || msg.includes('hi')) {
+        return "Hello! 👋 How can I help you today?";
+      }
+      if (msg.includes('how are you')) {
+        return "I'm here and ready to assist you!";
+      }
+      if (msg.includes('your name')) {
+        return "I'm Copilot, your AI assistant.";
+      }
+      if (msg.includes('bye')) {
+        return "Goodbye! If you need anything else, just ask.";
+      }
+      if (msg.includes('help')) {
+        return "You can ask me questions, get suggestions, or just chat!";
+      }
+      // Default response
+      return "I'm not sure I understand yet, but I'm learning every day!";
+    }
+
+    chatForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userMsg = userInput.value.trim();
+      if (!userMsg) return;
+
+      // Add user message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'message user';
+      userDiv.textContent = userMsg;
+      chatMessages.appendChild(userDiv);
+
+      // Bot response
+      setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot';
+        botDiv.textContent = getBotResponse(userMsg);
+        chatMessages.appendChild(botDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 500);
+
+      userInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  </script>
+</body>
+</html>
